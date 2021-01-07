@@ -1,0 +1,31 @@
+#!bin/bash
+set -e
+trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
+trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
+
+xcode-select --install
+
+curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+
+brew install --cask brave-browser
+
+open -a Brave\ Browser --args --make-default-browser
+
+brew tap bdcollins18/tap
+
+brew install --cask duplicacy-cli
+
+open https://duplicacy.com/gcd_start
+
+open -a Terminal #Refocus Terminal
+
+read -p "Save gcd-token.json somehere safe, press any key to continue"
+
+cd ~/Docuemnts
+
+duplicacy init documents gcd://Backup
+
+latest=$(duplicacy list | tail -n 1 | grep -oE " [0-9]+ ")
+
+duplicacy restore -r $latest
+
