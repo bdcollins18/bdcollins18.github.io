@@ -1,31 +1,93 @@
-#!bin/bash
+#!/bin/bash
 set -e
-trap 'last_command=$current_command; current_command=$BASH_COMMAND' DEBUG
-trap 'echo "\"${last_command}\" command filed with exit code $?."' EXIT
 
-xcode-select --install
+if [ ! -f "resources/Monty.jpg" ]; then
+	cd ~/Desktop
+	git clone https://github.com/bdcollins18/Configuration.git
+	cd Configuration
+fi
 
-curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh
+open todo-list.html
 
-brew install --cask brave-browser
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-open -a Brave\ Browser --args --make-default-browser
+brew update
+
+brew install git
+
+brew install bash
+
+brew install coreutils
+
+brew install moreutils
+
+brew install diffutils
+
+brew install findutils
+
+brew install mas
+
+brew install python
+
+brew install java
+
+sudo ln -sfn /usr/local/opt/openjdk/libexec/openjdk.jdk /Library/Java/JavaVirtualMachines/openjdk.jdk
+
+brew install fish
+
+echo $(which fish) | sudo tee -a /etc/shells
+
+sudo chsh -s $(which fish)
+
+mas install 926036361 #LastPass
+
+brew install --cask little-snitch
+
+brew install --cask sound-source
+
+mas install 441258766 #Magnet
+
+brew install --cask spotify
+
+brew install --cask discord
+
+brew install --cask league-of-legends
+
+brew install --cask steam
+
+brew install --cask sublime-text
+
+brew install --cask transmission
+
+mas install 1451685025 #WireGaurd
+
+brew install --cask qr-journal
+
+open -a 'WireGuard'
+
+open -a 'QR Journal'
+
+read -p 'Setup WireGuard and Enter A Host to Test: ' HOST
+
+ping -c 1 $HOST
+
+killall 'QR Journal'
+
+brew remove 'qr-journal'
 
 brew tap bdcollins18/tap
 
 brew install --cask duplicacy-cli
 
-open https://duplicacy.com/gcd_start
+cd ~/Documents
 
-open -a Terminal #Refocus Terminal
+echo 'Setting up Duplicacy with SFTP'
+read -p 'Enter a USER:HOST: ' USERHOST
 
-read -p "Save gcd-token.json somehere safe, press any key to continue"
+duplicacy init documents sftp://$USERHOST//bigslappy/backup/
 
-cd ~/Docuemnts
+REVISION=$(duplicacy list | tail -n 1 | grep -o -e "[0-9]\+" | head -n 1)
 
-duplicacy init documents gcd://Backup
+duplicacy restore -r $REVISION
 
-latest=$(duplicacy list | tail -n 1 | grep -oE " [0-9]+ ")
-
-duplicacy restore -r $latest
-
+/bin/bash macos-defaults
